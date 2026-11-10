@@ -119,6 +119,40 @@ curl http://<Raspberry Pi の IP アドレス>:8000/api/climate
 
 ブラウザで `http://<Raspberry Pi の IP アドレス>:8000/docs` を開くと、FastAPI が自動生成する API ドキュメントも見られます。
 
+## 自動起動（systemd）
+
+Raspberry Pi の起動時にサーバーが自動で立ち上がるようにする手順です（Raspberry Pi OS / Ubuntu 共通）。
+「セットアップ」の手順を `~/room-display-aht21b-api` で済ませていることを前提とします。
+
+### 1. サービスを登録する
+
+[deploy/room-display-aht21b-api.service](deploy/room-display-aht21b-api.service) の `YOUR_USER` を自分のユーザー名に置き換えて、`/etc/systemd/system/` に配置します。
+
+```sh
+cd ~/room-display-aht21b-api
+sed "s/YOUR_USER/$USER/g" deploy/room-display-aht21b-api.service | sudo tee /etc/systemd/system/room-display-aht21b-api.service
+```
+
+リポジトリを別の場所に置いた場合は、配置後のファイルの `WorkingDirectory` と `ExecStart` のパスを書き換えてください。
+
+### 2. 有効化して起動する
+
+```sh
+sudo systemctl daemon-reload
+sudo systemctl enable --now room-display-aht21b-api
+```
+
+`enable` で起動時に自動で立ち上がるようになり、`--now` で今すぐ起動します。
+
+### よく使うコマンド
+
+```sh
+systemctl status room-display-aht21b-api              # 状態を確認する
+journalctl -u room-display-aht21b-api -f              # ログを見る
+sudo systemctl restart room-display-aht21b-api        # 再起動する（コードを更新したとき）
+sudo systemctl disable --now room-display-aht21b-api  # 停止して自動起動を解除する
+```
+
 ## API
 
 ### `GET /api/climate`
