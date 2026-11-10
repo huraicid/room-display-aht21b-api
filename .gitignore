@@ -1,0 +1,17 @@
+# Python のバイトコードキャッシュ
+__pycache__/
+*.py[cod]
+
+# 仮想環境
+.venv/
+venv/
+env/
+
+# 環境変数・ローカル設定
+.env
+
+# エディタ / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
